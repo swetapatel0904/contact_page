@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../model/contact_model.dart';
 import '../provider/contact_provider.dart';
 
-
 class ContactScreen extends StatefulWidget {
   const ContactScreen({super.key});
 
@@ -20,7 +19,6 @@ class _ContactScreenState extends State<ContactScreen> {
   TextEditingController txtName = TextEditingController();
   TextEditingController txtMobile = TextEditingController();
   TextEditingController txtEmail = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +34,7 @@ class _ContactScreenState extends State<ContactScreen> {
           child: Column(
             children: [
               Stepper(
-                currentStep: providerW!.index,
+                  currentStep: providerW!.index,
                   onStepContinue: () {
                     providerR!.onStepContinue();
                   },
@@ -48,10 +46,15 @@ class _ContactScreenState extends State<ContactScreen> {
                       title: const Text("Add a photo"),
                       content: Column(
                         children: [
-                      CircleAvatar(
-                              radius: 50,
-                              backgroundImage: FileImage(File(providerW!.path)),
-                      ),
+                          providerW!.path!.isEmpty
+                              ? const CircleAvatar(
+                                  radius: 50,
+                                )
+                              : CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage:
+                                      FileImage(File(providerW!.path)),
+                                ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -127,16 +130,17 @@ class _ContactScreenState extends State<ContactScreen> {
               ElevatedButton(
                   onPressed: () {
                     ContactModel c1 = ContactModel(
-                      txtName: txtName.text,
-                      txtMobile: txtMobile.text,
-                      txtEmail: txtEmail.text,
+                      name: txtName.text,
+                      mobile: txtMobile.text,
+                      email: txtEmail.text,
                       image: providerR!.path,
                     );
                     providerR!.addContact(c1);
                     Navigator.pop(context);
-
+                    providerR!.index = 0;
+                     providerW!.path = "";
                   },
-                  child: Text("Submit"))
+                  child: const Text("Submit"))
             ],
           ),
         ),
