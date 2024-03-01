@@ -138,7 +138,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     providerR!.addContact(c1);
                     Navigator.pop(context);
                     providerR!.index = 0;
-                     providerW!.path = "";
+                    providerW!.path = "";
                   },
                   child: const Text("Submit"))
             ],

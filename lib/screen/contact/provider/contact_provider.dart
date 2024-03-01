@@ -1,18 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
 
+import '../../../utils/shared_helper.dart';
 import '../model/contact_model.dart';
 
 class ContactProvider with ChangeNotifier {
   List<ContactModel> contactList = [];
   String path = "";
   int index = 0;
-  bool isLight = true;
-  bool theme=true;
+  bool theme = false;
   String? editImage;
+  LocalAuthentication auth = LocalAuthentication();
+  bool isAuth = true;
+  ThemeMode mode = ThemeMode.light;
+  bool isTheme = false;
+  IconData themeMode = Icons.dark_mode;
 
-  void changeTheme() {
-    isLight = !isLight;
+  void setTheme() async {
+    theme = !theme;
+    saveTheme(isTheme: theme);
+    isTheme = (await applyTheme())!;
+    if (isTheme == true) {
+      mode = ThemeMode.dark;
+      themeMode = Icons.light_mode;
+    } else if (isTheme == false) {
+      mode = ThemeMode.light;
+      themeMode = Icons.dark_mode;
+    } else {
+      mode = ThemeMode.light;
+      themeMode = Icons.dark_mode;
+    }
+    notifyListeners();
+  }
 
+  void getTheme() async {
+    if (await applyTheme() == null) {
+      isTheme = false;
+    } else {
+      isTheme = (await applyTheme())!;
+    }
+    if (isTheme == true) {
+      mode = ThemeMode.dark;
+      themeMode = Icons.light_mode;
+    } else if (isTheme == false) {
+      mode = ThemeMode.light;
+      themeMode = Icons.dark_mode;
+    } else {
+      mode = ThemeMode.light;
+      themeMode = Icons.dark_mode;
+    }
     notifyListeners();
   }
 
@@ -39,20 +75,42 @@ class ContactProvider with ChangeNotifier {
     contactList.add(c1);
     notifyListeners();
   }
-  void deleteContact(int i)
-  {
+
+  void deleteContact(int i) {
     contactList.removeAt(i);
     notifyListeners();
   }
-  void updateContact({required int i,required ContactModel c3})
-  {
-    contactList[i]=c3;
+
+  void updateContact({required int i, required ContactModel c3}) {
+    contactList[i] = c3;
     notifyListeners();
   }
-  void editI(int i)
-  {
-    editImage=contactList[i].image;
+
+  void editI(String i) {
+    editImage = i;
     notifyListeners();
   }
- 
+
+  void editPath(String p1) {
+    editImage = p1;
+    notifyListeners();
+  }
+
+  Future<bool?> authLock() async {
+    bool isLock = await auth.canCheckBiometrics;
+
+    print("$isLock");
+    if (isLock) {
+      List<BiometricType> l1 = await auth.getAvailableBiometrics();
+
+      print("$l1");
+      if (l1.isNotEmpty) {
+        print("hello");
+        final bool isLogin = await auth.authenticate(
+            localizedReason: 'Please authenticate to show lock screen',
+            options: const AuthenticationOptions(biometricOnly: true));
+        return isLogin;
+      }
+    }
+  }
 }

@@ -26,11 +26,17 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                providerR!.changeTheme();
-                saveTheme(providerR!.isLight);
+                providerR!.setTheme();
               },
-              icon: Icon(
-                  providerR!.isLight ? Icons.dark_mode : Icons.light_mode)),
+              icon: Icon(providerW!.themeMode)),
+          IconButton(
+              onPressed: () async {
+                bool? authLock = await providerR!.authLock();
+                if (authLock == true) {
+                  Navigator.pushNamed(context, 'hide');
+                }
+              },
+              icon: const Icon(Icons.lock))
         ],
       ),
       body: Padding(
@@ -41,8 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, 'details',
-                      arguments: index);
+                  Navigator.pushNamed(context, 'details', arguments: index);
                 },
                 child: Container(
                   height: 80,
