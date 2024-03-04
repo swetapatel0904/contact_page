@@ -22,23 +22,70 @@ class _DetailScreenState extends State<DetailScreen> {
   TextEditingController txtName = TextEditingController();
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtMobile = TextEditingController();
-  int i = 0;
+  int i=0;
+  bool isContact=true;
 
   @override
   Widget build(BuildContext context) {
     providerR = context.read<ContactProvider>();
     providerW = context.watch<ContactProvider>();
-    i = ModalRoute.of(context)!.settings.arguments as int;
+    List l1= ModalRoute.of(context)!.settings.arguments as List;
+    i=l1[0];
+    isContact=l1[1];
     return Scaffold(
       appBar: AppBar(
         title: const Text("Contact Details"),
         actions: [
-          IconButton(
-              onPressed: () {
-                Share.share(
-                    "${providerW!.contactList[i].name}\n${providerW!.contactList[i].mobile}");
-              },
-              icon: Icon(Icons.share)),
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                    onTap: () {
+                      Share.share(
+                          "${providerW!.contactList[i].name}\n${providerW!.contactList[i].mobile}");
+                    },
+                    child: Text("Share")),
+                PopupMenuItem(
+                  onTap: ()
+                  {
+                    editDialog(context, i);
+                  },child: Text("Edit"),
+                ),
+                PopupMenuItem(
+                  onTap: ()
+                  {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Are you sure?"),
+                        actions: [
+                          ElevatedButton(
+                              onPressed: () {
+                                providerR!.deleteContact(i);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Yes!")),
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("No!")),
+                        ],
+                      ),
+                    );
+                  },child: Text("Delete"),
+                ),
+                PopupMenuItem(
+                  onTap: ()
+                  {
+                    providerR!.addHiddenList(i);
+                    Navigator.pop(context);
+                  },child: Text("Lock"),
+                )
+              ];
+            },
+          )
         ],
       ),
       body: Column(
@@ -72,51 +119,14 @@ class _DetailScreenState extends State<DetailScreen> {
           )
         ],
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-                onPressed: () {
-                  editDialog(context, i);
-                },
-                icon: Icon(Icons.edit)),
-            IconButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text("Are you sure?"),
-                      actions: [
-                        ElevatedButton(
-                            onPressed: () {
-                              providerR!.deleteContact(i);
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Yes!")),
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text("No!")),
-                      ],
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.delete)),
-          ],
-        ),
-      ),
     );
   }
 
   void editDialog(BuildContext context, int index) {
-    txtMobile.text = providerR!.contactList[index].mobile!;
-    txtEmail.text = providerR!.contactList[index].email!;
-    txtName.text = providerR!.contactList[index].name!;
-    providerR!.editI(providerR!.contactList[index].image!);
+    txtMobile.text = providerR!.contactList[i].mobile!;
+    txtEmail.text = providerR!.contactList[i].email!;
+    txtName.text = providerR!.contactList[i].name!;
+    providerR!.editI(providerR!.contactList[i].image!);
     showDialog(
         context: context,
         builder: (context) {

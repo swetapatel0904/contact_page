@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../utils/shared_helper.dart';
-import '../provider/contact_provider.dart';
+import '../../utils/shared_helper.dart';
+import '../contact/provider/contact_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -31,13 +31,14 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Icon(providerW!.themeMode)),
           IconButton(
               onPressed: () async {
-                bool? authLock = await providerR!.authLock();
-                if (authLock == true) {
+                // bool? authLock = await providerR!.authLock();
+                // if (authLock==true) {
                   Navigator.pushNamed(context, 'hide');
-                }
+                // }
               },
-              icon: const Icon(Icons.lock))
-        ],
+              icon: const Icon(Icons.lock)),
+
+    ]
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -47,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, 'details', arguments: index);
+                  Navigator.pushNamed(context, 'details', arguments: [index,true]);
                 },
                 child: Container(
                   height: 80,

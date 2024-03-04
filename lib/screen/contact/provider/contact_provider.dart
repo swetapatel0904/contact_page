@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 
@@ -6,6 +8,7 @@ import '../model/contact_model.dart';
 
 class ContactProvider with ChangeNotifier {
   List<ContactModel> contactList = [];
+  List<ContactModel> hiddenList=[];
   String path = "";
   int index = 0;
   bool theme = false;
@@ -15,6 +18,7 @@ class ContactProvider with ChangeNotifier {
   ThemeMode mode = ThemeMode.light;
   bool isTheme = false;
   IconData themeMode = Icons.dark_mode;
+
 
   void setTheme() async {
     theme = !theme;
@@ -97,20 +101,25 @@ class ContactProvider with ChangeNotifier {
   }
 
   Future<bool?> authLock() async {
+    bool isLogin=true;
     bool isLock = await auth.canCheckBiometrics;
 
-    print("$isLock");
+
     if (isLock) {
       List<BiometricType> l1 = await auth.getAvailableBiometrics();
-
-      print("$l1");
       if (l1.isNotEmpty) {
-        print("hello");
         final bool isLogin = await auth.authenticate(
-            localizedReason: 'Please authenticate to show lock screen',
+            localizedReason: 'Please authenticate to show hidden contact',
             options: const AuthenticationOptions(biometricOnly: true));
         return isLogin;
       }
     }
+  }
+  void addHiddenList(int i)
+  {
+    ContactModel c1=contactList[i];
+    hiddenList.add(c1);
+    contactList.removeAt(i);
+
   }
 }

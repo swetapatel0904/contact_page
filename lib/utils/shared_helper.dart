@@ -7,6 +7,5 @@ void saveTheme({required bool isTheme}) async {
 
 Future<bool?> applyTheme() async {
   SharedPreferences shr = await SharedPreferences.getInstance();
-  shr.getBool("theme");
   return shr.getBool("theme");
 }
