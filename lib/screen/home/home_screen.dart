@@ -21,25 +21,37 @@ class _HomeScreenState extends State<HomeScreen> {
     providerW = context.watch<ContactProvider>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home Screen"),
-        centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () {
-                providerR!.setTheme();
+          title: const Text("Home Screen"),
+          centerTitle: true,
+          leading: PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                  onTap: () {
+                    providerR!.setTheme();
+                  },
+                  child: Text("Mode"),
+                ),
+                PopupMenuItem(
+                  onTap: () async {
+                    bool? authLock = await providerR!.authLock();
+                    if (authLock == true) {
+                       Navigator.pushNamed(context, 'hide');
+                     }
+                  },
+                  child: Text("Lock"),
+                )
+              ];
+            },
+          ),
+          actions: [
+            Switch(
+              value: providerW!.isAndroid,
+              onChanged: (value) {
+                providerR!.changeUI();
               },
-              icon: Icon(providerW!.themeMode)),
-          IconButton(
-              onPressed: () async {
-                // bool? authLock = await providerR!.authLock();
-                // if (authLock==true) {
-                  Navigator.pushNamed(context, 'hide');
-                // }
-              },
-              icon: const Icon(Icons.lock)),
-
-    ]
-      ),
+            )
+          ]),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: ListView.builder(
@@ -48,7 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, 'details', arguments: [index,true]);
+                  Navigator.pushNamed(context, 'details',
+                      arguments: [index, true]);
                 },
                 child: Container(
                   height: 80,

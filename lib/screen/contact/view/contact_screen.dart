@@ -82,6 +82,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     Step(
                         title: const Text("Name"),
                         content: TextFormField(
+                          keyboardType: TextInputType.name,
                           validator: (value) {
                             if (value!.isEmpty) {
                               return "name is required";
@@ -95,6 +96,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     Step(
                         title: const Text("Contact"),
                         content: TextFormField(
+                          keyboardType: TextInputType.phone,
                           controller: txtMobile,
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -111,6 +113,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     Step(
                         title: const Text("Email"),
                         content: TextFormField(
+                          keyboardType: TextInputType.emailAddress,
                           controller: txtEmail,
                           validator: (value) {
                             if (value!.isEmpty) {

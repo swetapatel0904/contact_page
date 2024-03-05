@@ -15,19 +15,20 @@ void main() {
       ],
       child: Consumer<ContactProvider>(
         builder: (context, value, child) {
-      value.getTheme();
-      value.theme = value.isTheme;
-      return Platform.isAndroid?MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      themeMode: value.mode,
-      routes: app_route,
-      )
-      :CupertinoApp(
-        debugShowCheckedModeBanner: false,
-        routes: cupertino_approutes,
-      );
+          value.getTheme();
+          value.theme = value.isTheme;
+          return Platform.isAndroid
+              ? MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  theme: ThemeData.light(),
+                  darkTheme: ThemeData.dark(),
+                  themeMode: value.mode,
+                  routes: app_route,
+                )
+              : CupertinoApp(
+                  debugShowCheckedModeBanner: false,
+                  routes: cupertino_approutes,
+                );
         },
       ),
     ),
