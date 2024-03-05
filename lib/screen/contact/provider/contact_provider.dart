@@ -18,6 +18,14 @@ class ContactProvider with ChangeNotifier {
   ThemeMode mode = ThemeMode.light;
   bool isTheme = false;
   IconData themeMode = Icons.dark_mode;
+  bool isAndroid =true;
+
+  void changeUI()
+  {
+    isAndroid=!isAndroid;
+    notifyListeners();
+  }
+
 
 
   void setTheme() async {

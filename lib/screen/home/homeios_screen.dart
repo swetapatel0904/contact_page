@@ -1,4 +1,6 @@
+import 'package:contact_page/screen/contact/provider/contact_provider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 class HomeIosScreen extends StatefulWidget {
   const HomeIosScreen({super.key});
@@ -8,12 +10,22 @@ class HomeIosScreen extends StatefulWidget {
 }
 
 class _HomeIosScreenState extends State<HomeIosScreen> {
+  ContactProvider? providerR;
+  ContactProvider? providerW;
   @override
   Widget build(BuildContext context) {
-    return const CupertinoPageScaffold(
+    providerR= context.read<ContactProvider>();
+    providerW= context.watch<ContactProvider>();
+    return  CupertinoPageScaffold(
       child: Center(),
       navigationBar: CupertinoNavigationBar(
-          middle: Text("Home Screen"), trailing: Icon(CupertinoIcons.search)),
+          middle: Text("iOS"),
+      trailing: CupertinoSwitch(value:providerW!.isAndroid, onChanged: (value) {
+        providerR!.changeUI();
+      },
+      )
+  ),
+
     );
   }
 }
