@@ -1,10 +1,4 @@
 class ContactModel {
-  String? txtName, txtMobile, txtEmail, image;
-
-  ContactModel({
-     this.txtName,
-     this.txtMobile,
-     this.txtEmail,
-     this.image
-  });
+  String? name,mobile,image,email;
+  ContactModel({required this.name, required this.mobile,required this.image,required this.email});
 }
